@@ -3,10 +3,10 @@
 # ============================================================================
 
 data:
-  spectral_dir: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/spectral/GEE_Wheat_Daily_S2_FullSeason"
-  meteo_dir: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/meteo/GEE_Wheat_Daily_Meteo_FullSeason"
-  static_features_path: "C:/Users/Vlasis/Repos/GPC_Analysis/data/processed/static_features_full.csv"
-  field_elevation_path: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/drive_download/field_elevation_stats.csv"
+  spectral_dir: "C:/Users/Vlasis/Repos/WheatGPCPipeline/data/raw/spectral/GEE_Wheat_Daily_S2_FullSeason"
+  meteo_dir: "C:/Users/Vlasis/Repos/WheatGPCPipeline/data/raw/meteo/GEE_Wheat_Daily_Meteo_FullSeason"
+  static_features_path: "C:/Users/Vlasis/Repos/WheatGPCPipeline/data/processed/static_features_full.csv"
+  field_elevation_path: "C:/Users/Vlasis/Repos/WheatGPCPipeline/data/raw/drive_download/field_elevation_stats.csv"
   sample_elevation_path: null  # Disabled - using only field-level stats
   full_season_start: "2024-07-01"
   full_season_end: "2025-06-30"
