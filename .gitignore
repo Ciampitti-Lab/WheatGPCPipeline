@@ -1,5 +1,6 @@
 # Data files
 data/cache/
+data/raw
 data/processed/
 notebooks/data/processed/
 
