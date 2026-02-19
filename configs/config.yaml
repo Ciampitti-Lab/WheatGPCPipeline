@@ -1,0 +1,430 @@
+# ============================================================================
+# GPC Peak-Aligned Prediction Pipeline - Configuration
+# ============================================================================
+
+data:
+  spectral_dir: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/spectral/GEE_Wheat_Daily_S2_FullSeason"
+  meteo_dir: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/meteo/GEE_Wheat_Daily_Meteo_FullSeason"
+  static_features_path: "C:/Users/Vlasis/Repos/GPC_Analysis/data/processed/static_features_full.csv"
+  field_elevation_path: "C:/Users/Vlasis/Repos/GPC_Analysis/data/raw/drive_download/field_elevation_stats.csv"
+  sample_elevation_path: null  # Disabled - using only field-level stats
+  full_season_start: "2024-07-01"
+  full_season_end: "2025-06-30"
+  output_dir: "data/processed"
+
+# ----------------------------------------------------------------------------
+# Peak Detection
+# ----------------------------------------------------------------------------
+peak_detection:
+  reference_var: "GCVI"
+  fit_start_date: "2025-02-01"
+  fit_end_date: "2025-06-30"
+  resample_days: 3
+  savgol_window: 7
+  savgol_polyorder: 2
+  interpolate_daily: true     # Interpolate to daily grid before smoothing for better fitting
+  lmfit_max_nfev: 2000
+  min_obs_pct: 0.25
+  valid_peak_start_month: 4   # April (remove early March peaks)
+  valid_peak_end_month: 5     # May (remove June+ peaks)
+
+peak_qc:
+  exclude_anomalous: true     # SWITCH: exclude fields with peak outside valid range
+  flag_column: "peak_anomalous"
+  # Additional curve quality filters (0 = disabled)
+  min_peak_gcvi: 0            # Disabled
+  min_amplitude: 0            # Disabled
+  min_fit_r2: 0.5             # Remove fields with poor curve fit
+
+# ----------------------------------------------------------------------------
+# Temporal Aggregation
+# ----------------------------------------------------------------------------
+aggregation:
+  mode: "calendar_biweekly"             # SWITCH: "biweekly" | "monthly" | "phenological" | "peak_stages" | "custom" | "calendar_monthly" | "calendar_biweekly"
+
+  biweekly:
+    peak_window: [-7, 7]      # Peak biweek: 15 days centered on peak
+    step: 15                  # Each subsequent biweek = 15 days
+    n_before: 18              # Number of biweeks before peak (~270 days, covers from July)
+    n_after: 5                # Number of biweeks after peak (~75 days, covers to June)
+
+  monthly:
+    peak_window: [-15, 15]    # Peak month: 31 days centered on peak
+    step: 30                  # Each subsequent month = 30 days
+    n_before: 9               # Number of months before peak
+    n_after: 3                # Number of months after peak
+
+  phenological:
+    stages:
+      tillering: [-120, -75]
+      stem_elongation: [-75, -40]
+      booting: [-40, -15]
+      heading_anthesis: [-15, 10]
+      grain_filling: [10, 40]
+      maturity: [40, 70]
+
+  peak_stages:
+    # 5 peak-relative periods (peak = day 0)
+    stages:
+      cp1: [-300, -121]   # early season
+      cp2: [-120, -60]    # winter
+      cp3: [-59, -14]     # spring
+      cp4: [-15, 15]      # peak window
+      cp5: [16, 36]       # late season
+
+  custom:
+    # 5 calendar-based periods (aggregated by actual date, not peak-relative)
+    stages:
+      cp1: ["2024-07-01", "2024-12-31"]   # early season
+      cp2: ["2025-01-01", "2025-02-28"]   # winter
+      cp3: ["2025-03-01", "2025-04-15"]   # spring
+      cp4: ["2025-04-16", "2025-05-15"]   # peak window
+      cp5: ["2025-05-16", "2025-06-30"]   # late season
+
+  calendar_monthly:
+    # 12 actual calendar months (Jul 2024 – Jun 2025)
+    stages:
+      jul: ["2024-07-01", "2024-07-31"]
+      aug: ["2024-08-01", "2024-08-31"]
+      sep: ["2024-09-01", "2024-09-30"]
+      oct: ["2024-10-01", "2024-10-31"]
+      nov: ["2024-11-01", "2024-11-30"]
+      dec: ["2024-12-01", "2024-12-31"]
+      jan: ["2025-01-01", "2025-01-31"]
+      feb: ["2025-02-01", "2025-02-28"]
+      mar: ["2025-03-01", "2025-03-31"]
+      apr: ["2025-04-01", "2025-04-30"]
+      may: ["2025-05-01", "2025-05-31"]
+      jun: ["2025-06-01", "2025-06-30"]
+
+  calendar_biweekly:
+    # 24 biweekly periods (Jul 2024 - Jun 2025), each month split 1st-15th / 16th-end
+    stages:
+      jul_1: ["2024-07-01", "2024-07-15"]
+      jul_2: ["2024-07-16", "2024-07-31"]
+      aug_1: ["2024-08-01", "2024-08-15"]
+      aug_2: ["2024-08-16", "2024-08-31"]
+      sep_1: ["2024-09-01", "2024-09-15"]
+      sep_2: ["2024-09-16", "2024-09-30"]
+      oct_1: ["2024-10-01", "2024-10-15"]
+      oct_2: ["2024-10-16", "2024-10-31"]
+      nov_1: ["2024-11-01", "2024-11-15"]
+      nov_2: ["2024-11-16", "2024-11-30"]
+      dec_1: ["2024-12-01", "2024-12-15"]
+      dec_2: ["2024-12-16", "2024-12-31"]
+      jan_1: ["2025-01-01", "2025-01-15"]
+      jan_2: ["2025-01-16", "2025-01-31"]
+      feb_1: ["2025-02-01", "2025-02-15"]
+      feb_2: ["2025-02-16", "2025-02-28"]
+      mar_1: ["2025-03-01", "2025-03-15"]
+      mar_2: ["2025-03-16", "2025-03-31"]
+      apr_1: ["2025-04-01", "2025-04-15"]
+      apr_2: ["2025-04-16", "2025-04-30"]
+      may_1: ["2025-05-01", "2025-05-15"]
+      may_2: ["2025-05-16", "2025-05-31"]
+      jun_1: ["2025-06-01", "2025-06-15"]
+      jun_2: ["2025-06-16", "2025-06-30"]
+
+  agg_functions:
+    vegetation_indices: ["mean", "std", "p10", "p90"]
+    spectral_bands: ["mean"]
+    temperature: ["mean"]
+    precipitation: ["sum"]
+    pet: ["sum"]
+    gdd: ["sum"]
+    vpd: ["mean"]
+    ssrd: ["mean"]
+
+# ----------------------------------------------------------------------------
+# Feature Lists
+# ----------------------------------------------------------------------------
+spectral:
+  precomputed_indices:
+    - NDVI
+    - EVI2
+    - GNDVI
+    - NDRE
+    - CIre
+    - IRECI
+    - NDWI
+    - MSI
+    - GCVI
+    - MNDWI
+    - NBR
+    - NBR2
+    - GVI
+    - DGCI
+    - NDSWIR1RedEdge1
+    - TCARI
+    - OSAVI
+    - CCCI
+    - mARI
+    - ExG
+    - DBSI
+    - SMMI
+    - MIRBI
+    - CVI
+    - S2REP
+    - PVI
+    - MTCI
+    - SAVI
+    - NDRE2
+    - RE_ratio
+    - PSRI
+    - LSWI
+  bands:
+    - B2
+    - B3
+    - B4
+    - B5
+    - B6
+    - B7
+    - B8
+    - B8A
+    - B11
+    - B12
+
+meteo:
+  variables:
+    - t2m_mean
+    - t2m_min
+    - t2m_max
+    - precip
+    - pet
+    - dewpoint
+    - ssrd_MJm2
+  # Derived variables computed from raw meteo (via compute_derived_meteo):
+  derived_variables:
+    - vpd           # Vapor Pressure Deficit (from t2m_mean, dewpoint)
+    - gdd           # Growing Degree Days (from t2m_max, t2m_min)
+    - water_deficit # PET - precipitation
+  gdd_base_temp: 0.0
+
+soil:
+  columns:
+    - soil_awc_total
+    - soil_clay_ratio
+    - soil_om_depth_decay
+    - soil_sr_awc_profile
+    - soil_sr_ksat_profile
+    - soil_sr_paw_total_mm
+    - soil_sub_awc_mm
+    - soil_sub_awc_vol
+    - soil_sub_bd
+    - soil_sub_cec
+    - soil_sub_clay
+    - soil_sub_ksat_log10
+    - soil_sub_om
+    - soil_sub_sand
+    - soil_sub_silt
+    - soil_sub_sr_AWC
+    - soil_sub_sr_DUL
+    - soil_sub_sr_KSAT
+    - soil_sub_sr_LL15
+    - soil_sub_sr_SAT
+    - soil_sub_sr_awc_mm
+    - soil_subsoil_awc
+    - soil_subsoil_clay
+    - soil_top_awc_mm
+    - soil_top_awc_vol
+    - soil_top_bd
+    - soil_top_cec
+    - soil_top_clay
+    - soil_top_ksat_log10
+    - soil_top_om
+    - soil_top_sand
+    - soil_top_silt
+    - soil_top_sr_AWC
+    - soil_top_sr_DUL
+    - soil_top_sr_KSAT
+    - soil_top_sr_LL15
+    - soil_top_sr_SAT
+    - soil_top_sr_awc_mm
+    - soil_topsoil_awc
+    - soil_topsoil_bd
+    - soil_topsoil_cec
+    - soil_topsoil_clay
+    - soil_topsoil_om
+  static_columns:
+    - irrigated_lanid
+
+topographic:
+  # From field_elevation_stats.csv (loaded via load_elevation)
+  columns:
+    - elevation       # Field mean elevation (m)
+    - slope           # Field mean slope (degrees)
+    - aspect          # Field mean aspect (degrees from north)
+    - elev_std        # Elevation standard deviation within field
+    - elev_range      # Elevation range within field
+  # From static_features_full.csv (loaded via load_static_features)
+  location_columns:
+    - centroid_lat    # Field centroid latitude
+    - centroid_lon    # Field centroid longitude
+
+# ----------------------------------------------------------------------------
+# Feature Engineering
+# ----------------------------------------------------------------------------
+feature_engineering:
+  band_ratios:
+    - [B8, B4]
+    - [B8A, B11]
+    - [B6, B5]
+    - [B7, B6]
+    - [B5, B4]
+  vi_interactions:
+    - [NDVI, NDRE]
+    - [NDVI, NDWI]
+    - [NDVI, PSRI]
+    - [GCVI, NDRE]
+    - [EVI2, PSRI]
+    - [MTCI, NDRE]
+    - [CIre, NDVI]
+  vi_soil_interactions:
+    vis: [NDVI, EVI2, NDWI, GCVI]
+    soil_props: [soil_top_clay, soil_top_om, soil_awc_total]
+  vi_meteo_interactions:
+    vis: [NDVI, EVI2, GCVI, NDRE]
+    meteo_vars: [t2m_mean, precip, vpd, gdd]
+  # Disabled — too many noisy features for 228 samples
+  # band_vi_interactions:
+  #   bands: [B4, B5, B6, B8, B11]
+  #   vis: [NDVI, NDRE, GCVI]
+  # band_soil_interactions:
+  #   bands: [B4, B8, B11, B12]
+  #   soil_props: [soil_top_clay, soil_top_om, soil_awc_total]
+  # band_meteo_interactions:
+  #   bands: [B4, B8, B11]
+  #   meteo_vars: [t2m_mean, precip, vpd]
+  # meteo_soil_interactions:
+  #   meteo_vars: [t2m_mean, precip, vpd, gdd]
+  #   soil_props: [soil_top_clay, soil_top_om, soil_awc_total]
+  temporal_derivatives: true
+  phenological_features: true
+
+# ----------------------------------------------------------------------------
+# Feature Selection
+# ----------------------------------------------------------------------------
+feature_selection:
+  method: boruta                    # SWITCH: "mrmr", "boruta", or "pls_vip"
+
+  unsupervised_prescreening:
+    enabled: true
+    variance_threshold: 1.0e-6      # Remove near-constant features
+    collinear_threshold: 0.90         # Remove features with |r| > 0.90 (needed for mRMR)
+
+  prescreening:
+    enabled: false
+    correlation_percentile: 85
+    mi_percentile: 80
+    mi_n_neighbors: 3
+
+  boruta:
+    n_estimators: 200
+    max_depth: 7
+    alpha: 0.05                      # Statistical significance level
+    max_iter: 100                    # Max Boruta iterations
+    perc: 100                        # Percentile of shadow feature max
+    include_tentative: true          # Include tentative features
+
+  pls_vip:
+    max_components: 20               # Max PLS components to try in inner CV
+    vip_threshold: 1.8               # VIP >= 1.8 (balanced, ~20-40 features)
+    cv_folds: 5                      # Inner CV folds for n_components selection
+    min_features: 10                 # Fallback: minimum features to keep
+
+  mrmr:
+    K_values: [10, 15, 20, 25, 30, 40, 50, 60, 75, 100]
+    override_K: null            # Set to a number (e.g., 50) to force specific K, null uses grid search best
+    cv_folds: 5
+    cv_estimator:
+      model_type: XGBoost    # LightGBM | XGBoost | RandomForest | ElasticNet
+      n_estimators: 200
+      learning_rate: 0.05
+      max_depth: 6
+
+  rfe_consensus:
+    enabled: false
+    step: 5
+    min_features: 20
+    cv_folds: 5
+    consensus_rule: "all"  # options: "all" | "majority"
+    models:
+      LightGBM:
+        n_estimators: 200
+        learning_rate: 0.05
+        max_depth: 6
+        num_leaves: 31
+        subsample: 0.8
+        colsample_bytree: 0.8
+      RandomForest:
+        n_estimators: 200
+        max_depth: 10
+        min_samples_leaf: 2
+        max_features: 0.7
+        max_samples: 0.8
+        bootstrap: true
+      XGBoost:
+        n_estimators: 200
+        learning_rate: 0.05
+        max_depth: 6
+        subsample: 0.8
+        colsample_bytree: 0.7
+
+# ----------------------------------------------------------------------------
+# Modeling
+# ----------------------------------------------------------------------------
+modeling:
+  models:
+    RandomForest: true
+    LightGBM: true
+    XGBoost: true
+    ElasticNet: true
+    CatBoost: false             # Disabled by default
+    Stacking: true
+
+  cv:
+    outer_splits: 5
+    inner_splits: 5
+    inner_repeats: 3
+    test_size: 0.2
+
+  hyperparameters:
+    RandomForest:
+      n_estimators: [100, 200, 400, 500]
+      max_depth: [5, 10, 15, 20, null]
+      min_samples_leaf: [1, 2, 4]
+      max_features: [sqrt, log2, 0.5]
+    LightGBM:
+      n_estimators: [100, 300, 500, 600]
+      learning_rate: [0.01, 0.03, 0.05, 0.1]
+      max_depth: [5, 10, 15, 20, -1]
+      num_leaves: [31, 63, 127]
+      subsample: [0.7, 0.8, 0.9]
+      colsample_bytree: [0.7, 0.8, 1.0]
+    XGBoost:
+      n_estimators: [100, 300, 500, 600]
+      learning_rate: [0.01, 0.03, 0.05, 0.1]
+      max_depth: [3, 4, 5, 6, 7, 8, 10]
+      subsample: [0.7, 0.8, 0.9]
+      colsample_bytree: [0.7, 0.8, 1.0]
+      min_child_weight: [1, 3, 5]
+    ElasticNet:
+      alpha: [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0]
+      l1_ratio: [0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0]
+      max_iter: [2000]
+    CatBoost:
+      iterations: [250, 500, 1000]
+      depth: [4, 5, 6, 8, 10]
+      learning_rate: [0.01, 0.05, 0.1]
+      l2_leaf_reg: [1, 3, 5, 10]
+
+# ----------------------------------------------------------------------------
+# Evaluation
+# ----------------------------------------------------------------------------
+evaluation:
+  metrics: [R2, CCC, RMSE, RRMSE, MBE, PLA, PLP, KGE]
+
+# ----------------------------------------------------------------------------
+# General
+# ----------------------------------------------------------------------------
+random_state: 42

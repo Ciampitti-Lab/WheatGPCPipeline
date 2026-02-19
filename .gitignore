@@ -1,0 +1,40 @@
+# Data files
+data/cache/
+data/processed/
+notebooks/data/processed/
+
+# Model artifacts
+models/
+
+# Generated figures
+figures/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.venv/
+env/
+venv/
+
+# Notebook data & generated images
+notebooks/data/
+notebooks/*.png
+
+# Junk
+nul
