@@ -50,7 +50,7 @@ A machine learning pipeline for predicting **winter wheat grain protein content 
 │                                 ▼                                       │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                    Feature Selection                              │  │
-│  │             Variance filter · mRMR / Boruta / PLS-VIP
+│  │                   Variance filter · Boruta
 │  └──────────────────────────────┬────────────────────────────────────┘  │
 │                                 │                                       │
 │                                 ▼                                       │
@@ -78,7 +78,7 @@ WheatGPCPipeline/
 │   ├── smoothing.py                 # Savitzky-Golay smoothing
 │   ├── temporal_alignment.py        # Temporal aggregation strategies
 │   ├── feature_engineering.py       # Derived features
-│   ├── feature_selection.py         # mRMR, Boruta, PLS-VIP, RFE consensus
+│   ├── feature_selection.py         # Boruta
 │   ├── modeling.py                  # Model training with nested cross-validation
 │   ├── evaluation.py                # Metrics computation & visualization
 │   ├── saxton_rawls.py              # Saxton & Rawls pedotransfer functions
