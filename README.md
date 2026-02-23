@@ -22,10 +22,10 @@ A machine learning pipeline for predicting **winter wheat grain protein content 
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────────────────┐   │
-│  │  Sentinel-2   │    │ Meteorological│    │   Soil & Topographic    │   │
-│  │  Daily VI &   │    │   Variables   │    │     Properties          │   │
-│  │  Spectral     │    │  (ERA5-Land)  │    │   (gsSURGO + GEE)    │   │
-│  │  Bands (GEE)  │    │    (GEE)      │    │                        │   │
+│  │  Sentinel-2   │   │ Meteorological│    │   Soil & Topographic    │   │
+│  │  Daily VI &   │   │   Variables   │    │     Properties          │   │
+│  │  Spectral     │   │  (ERA5-Land)  │    │   (gsSURGO + GEE)       │   │
+│  │  Bands (GEE)  │   │    (GEE)      │    │                         |   │
 │  └──────┬───────┘    └──────┬───────┘    └───────────┬──────────────┘   │
 │         │                   │                        │                  │
 │         ▼                   │                        │                  │
@@ -37,14 +37,14 @@ A machine learning pipeline for predicting **winter wheat grain protein content 
 │         │                   │                        │                  │
 │         ▼                   ▼                        │                  │
 │  ┌─────────────────────────────────┐                 │                  │
-│  │   Temporal Alignment &          │                 │                  │
+│  │   Temporal Normalization &      │                 │                  │
 │  │   Aggregation (6 strategies)    │                 │                  │
 │  └──────────────┬──────────────────┘                 │                  │
 │                 │                                    │                  │
 │                 ▼                                    ▼                  │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                    Feature Engineering                            │  │
-│  │                          Derivatives
+│  │                     
 │  └──────────────────────────────┬────────────────────────────────────┘  │
 │                                 │                                       │
 │                                 ▼                                       │
@@ -56,7 +56,7 @@ A machine learning pipeline for predicting **winter wheat grain protein content 
 │                                 ▼                                       │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                    Modeling & Evaluation                          │  │
-│  │                Nested CV · RF · LightGBM · XGBoost
+│  │                Nested CV · RF · LightGBM · XGBoost                |  |
 │  └───────────────────────────────────────────────────────────────────┘  │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
