@@ -41,7 +41,7 @@ def build_model(
 
     elif name == "RandomForest":
         from sklearn.ensemble import RandomForestRegressor
-        est = RandomForestRegressor(random_state=random_state, n_jobs=-1)
+        est = RandomForestRegressor(random_state=random_state, n_jobs=1)
         grid = {
             "n_estimators": param_grid.get("n_estimators", [200, 400]),
             "max_depth": param_grid.get("max_depth", [10, 20, None]),
@@ -56,7 +56,7 @@ def build_model(
                 objective="reg:squarederror",
                 verbosity=0,
                 random_state=random_state,
-                n_jobs=-1,
+                n_jobs=1,
             )
             grid = {
                 "n_estimators": param_grid.get("n_estimators", [300, 600]),
@@ -75,7 +75,7 @@ def build_model(
             est = LGBMRegressor(
                 verbose=-1,
                 random_state=random_state,
-                n_jobs=-1,
+                n_jobs=1,
             )
             grid = {
                 "n_estimators": param_grid.get("n_estimators", [300, 600]),
@@ -210,11 +210,11 @@ def build_stacking_ensemble(
 
     base_models = [
         ("rf", RandomForestRegressor(
-            n_estimators=300, max_depth=10, random_state=random_state, n_jobs=-1,
+            n_estimators=300, max_depth=10, random_state=random_state, n_jobs=1,
         )),
         ("lgbm", LGBMRegressor(
             n_estimators=200, max_depth=6, learning_rate=0.05,
-            random_state=random_state, n_jobs=-1, verbose=-1,
+            random_state=random_state, n_jobs=1, verbose=-1,
         )),
     ]
 
