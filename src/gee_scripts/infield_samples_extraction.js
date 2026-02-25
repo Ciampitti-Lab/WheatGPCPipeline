@@ -201,12 +201,15 @@ MONTHS.forEach(function(m) {
     ]);
 
     return polys.map(function(f) {
+      // Use a ~6km buffer around the sample centroid to ensure at least one
+      // ERA5-Land pixel (~11km) is captured. bestEffort: false forces an error
+      // rather than silently returning null properties for small geometries.
       var stats = meteo.reduceRegion({
         reducer: ee.Reducer.mean(),
-        geometry: f.geometry(),
+        geometry: f.geometry().centroid(1).buffer(6000),
         scale: 11132,  // ERA5-Land native resolution (~11km)
         maxPixels: 1e8,
-        bestEffort: true
+        bestEffort: false
       });
 
       return ee.Feature(null, stats)
