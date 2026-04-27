@@ -8,7 +8,7 @@ A machine learning pipeline for predicting **winter wheat grain protein content 
 
 - **Phenology-driven temporal alignment** using GCVI peak detection with double logistic curve fitting
 - **Six temporal aggregation strategies** (peak-relative biweekly/monthly, phenological stages, calendar-based, custom periods)
-- **Multiple feature selection methods** (Boruta)
+- **Feature selection processing**
 - **Nested cross-validation** (5-outer × 5-inner × 3-repeats) with Random Forest, LightGBM, XGBoost, and ElasticNet
 - **Fully configurable** via a single YAML configuration file
 
