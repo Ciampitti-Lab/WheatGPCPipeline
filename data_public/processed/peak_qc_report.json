@@ -1,0 +1,38 @@
+{
+  "total_fields": 240,
+  "valid_fields": 228,
+  "anomalous_fields": 12,
+  "pct_anomalous": 5.0,
+  "valid_peak_range": "Month 4 to 5",
+  "qc_thresholds": {
+    "min_peak_gcvi": 0,
+    "min_amplitude": 0,
+    "min_fit_r2": 0.5
+  },
+  "anomaly_reasons": {
+    "peak_outside_season": 12,
+    "poor_fit": 6
+  },
+  "peak_month_distribution": {
+    "3": 3,
+    "4": 181,
+    "5": 47,
+    "6": 9
+  },
+  "fit_method_distribution": {
+    "double_logistic": 240
+  },
+  "peak_doy_stats": {
+    "mean": 117.22762762762763,
+    "median": 114.86486486486487,
+    "std": 14.670469333312813,
+    "min": 62.68468468468468,
+    "max": 178.0
+  },
+  "fit_r2_stats": {
+    "mean": 0.9322383601448097,
+    "median": 0.9667269847461065,
+    "min": -0.011590700493016914,
+    "max": 0.9960149111926703
+  }
+}
