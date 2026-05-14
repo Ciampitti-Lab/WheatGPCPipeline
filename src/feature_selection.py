@@ -24,7 +24,7 @@ def _get_cv_estimator(model_type="LightGBM", **kwargs):
         from lightgbm import LGBMRegressor
         defaults = {
             "n_estimators": 200, "learning_rate": 0.05, "max_depth": 6,
-            "random_state": 42, "n_jobs": -1, "verbose": -1,
+            "random_state": 42, "n_jobs": 1, "verbose": -1,
         }
         defaults.update(kwargs)
         return LGBMRegressor(**defaults)
@@ -33,7 +33,7 @@ def _get_cv_estimator(model_type="LightGBM", **kwargs):
         from xgboost import XGBRegressor
         defaults = {
             "n_estimators": 200, "learning_rate": 0.05, "max_depth": 6,
-            "random_state": 42, "n_jobs": -1, "verbosity": 0,
+            "random_state": 42, "n_jobs": 1, "verbosity": 0,
         }
         defaults.update(kwargs)
         return XGBRegressor(**defaults)
@@ -42,7 +42,7 @@ def _get_cv_estimator(model_type="LightGBM", **kwargs):
         from sklearn.ensemble import RandomForestRegressor
         defaults = {
             "n_estimators": 200, "max_depth": 10, "random_state": 42,
-            "n_jobs": -1,
+            "n_jobs": 1,
         }
         defaults.update(kwargs)
         return RandomForestRegressor(**defaults)
@@ -353,7 +353,7 @@ def build_rfe_models(config: dict) -> Dict[str, Any]:
     from lightgbm import LGBMRegressor
     models["LightGBM"] = LGBMRegressor(
         random_state=random_state,
-        n_jobs=-1,
+        n_jobs=1,
         verbose=-1,
         **lgbm_cfg,
     )
@@ -363,7 +363,7 @@ def build_rfe_models(config: dict) -> Dict[str, Any]:
     from sklearn.ensemble import RandomForestRegressor
     models["RandomForest"] = RandomForestRegressor(
         random_state=random_state,
-        n_jobs=-1,
+        n_jobs=1,
         **rf_cfg,
     )
 
@@ -372,7 +372,7 @@ def build_rfe_models(config: dict) -> Dict[str, Any]:
     from xgboost import XGBRegressor
     models["XGBoost"] = XGBRegressor(
         random_state=random_state,
-        n_jobs=-1,
+        n_jobs=1,
         verbosity=0,
         **xgb_cfg,
     )
@@ -661,7 +661,7 @@ def boruta_select(
     rf = RandomForestRegressor(
         n_estimators=n_estimators,
         max_depth=max_depth,
-        n_jobs=-1,
+        n_jobs=1,
         random_state=random_state,
     )
 
