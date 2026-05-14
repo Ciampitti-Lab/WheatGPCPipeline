@@ -2,15 +2,20 @@
 # GPC Peak-Aligned Prediction Pipeline - Configuration
 # ============================================================================
 
+# Paths below are written as relative paths from the repository root.
+# Override them at runtime (e.g. via a local config copy) to point at
+# your own data storage. Raw and processed data are not redistributed
+# with the repository; see the public release in data_public/ for a
+# de-identified subset.
 data:
-  spectral_dir: "/depot/ciampitti/data/WheatGrainProteinConcentrationPrediction/data/raw/spectral/GEE_Wheat_Daily_S2_FullSeason"
-  meteo_dir: "/depot/ciampitti/data/WheatGrainProteinConcentrationPrediction/data/raw/meteo/GEE_Wheat_Daily_Meteo_FullSeason"
-  static_features_path: "/depot/ciampitti/data/WheatGrainProteinConcentrationPrediction/data/processed/static_features_full.csv"
-  field_elevation_path: "/depot/ciampitti/data/WheatGrainProteinConcentrationPrediction/data/raw/field_elevation_stats/field_elevation_stats.csv"
+  spectral_dir: "data/raw/spectral/GEE_Wheat_Daily_S2_FullSeason"
+  meteo_dir: "data/raw/meteo/GEE_Wheat_Daily_Meteo_FullSeason"
+  static_features_path: "data/processed/static_features_full.csv"
+  field_elevation_path: "data/raw/field_elevation_stats/field_elevation_stats.csv"
   sample_elevation_path: null  # Disabled - using only field-level stats
   full_season_start: "2024-07-01"
   full_season_end: "2025-06-30"
-  output_dir: "/home/vmangidi/WheatGrainProteinConcentrationPrediction/data/processed"
+  output_dir: "notebooks/data/processed"
 
 # ----------------------------------------------------------------------------
 # Peak Detection
